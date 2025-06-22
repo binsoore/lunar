@@ -26,17 +26,30 @@ npm install
 npm run dev
 ```
 
-### CloudFlare Pages 배포
+### CloudFlare Pages 배포 문제 해결
 
-현재 구조가 이미 정적 배포에 적합합니다:
-- 모든 로직이 클라이언트 사이드에서 실행
-- 음력-양력 변환 데이터가 번들에 포함
-- 서버 의존성 없음
+**문제**: https://709957f7.lunar-1tz.pages.dev/ 에서 404 오류 발생
 
-CloudFlare Pages 배포 설정:
-- Build command: `npm run build`  
-- Build output directory: `dist`
-- Framework preset: Vite
+**원인**: 현재 프로젝트가 fullstack 구조로 되어 있어서 정적 배포가 제대로 되지 않음
+
+**해결 방법**:
+
+1. **CloudFlare Pages 대시보드에서 빌드 설정 변경**:
+   ```
+   Build command: npm run build
+   Build output directory: dist
+   Root directory: (비워두기)
+   Environment variables: NODE_VERSION=20
+   ```
+
+2. **또는 클라이언트만 따로 빌드**:
+   - `client` 폴더만 별도 리포지토리로 분리
+   - Vite 프로젝트로 독립 배포
+
+3. **즉시 해결 방법**:
+   - CloudFlare Pages에서 "Retry deployment" 클릭
+   - 빌드 로그에서 오류 확인
+   - `dist/` 폴더에 `index.html`이 생성되는지 확인
 
 개발 서버가 `http://localhost:5000`에서 실행됩니다.
 
