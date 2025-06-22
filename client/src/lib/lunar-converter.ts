@@ -28,11 +28,12 @@ function parseBaseDateData(): DateMapping[] {
   
   lines.forEach(line => {
     if (line.trim()) {
-      const match = line.match(/\d+:\s*([^,]+),\s*(.+)/);
-      if (match) {
+      // Split by comma to get solar and lunar dates
+      const parts = line.split(',');
+      if (parts.length === 2) {
         parsedData.push({
-          solar: match[1].trim(),
-          lunar: match[2].trim()
+          solar: parts[0].trim(),
+          lunar: parts[1].trim()
         });
       }
     }
@@ -58,17 +59,8 @@ function parseDateString(dateStr: string): Date | null {
   }
 }
 
-function formatLunarDate(month: number, day: number): string {
-  // Format lunar date to match the format in base data
-  const monthStr = month.toString().padStart(2, '0');
-  const dayStr = day.toString().padStart(2, '0');
-  return `${monthStr}-${dayStr}`;
-}
-
 function findLunarToSolarMapping(lunarMonth: number, lunarDay: number, targetYear: number): Date | null {
-  const targetLunarDate = formatLunarDate(lunarMonth, lunarDay);
-  
-  // Find entries that match the lunar month and day
+  // Find entries that match the lunar month and day for any year in the data
   const matchingEntries = baseDateData.filter(entry => {
     const lunarDate = parseDateString(entry.lunar);
     if (!lunarDate) return false;
@@ -81,48 +73,50 @@ function findLunarToSolarMapping(lunarMonth: number, lunarDay: number, targetYea
 
   if (matchingEntries.length === 0) return null;
 
-  // Find the closest year match or interpolate
-  for (const entry of matchingEntries) {
-    const solarDate = parseDateString(entry.solar);
-    const lunarDate = parseDateString(entry.lunar);
-    
-    if (!solarDate || !lunarDate) continue;
-    
-    const yearDiff = targetYear - solarDate.getFullYear();
-    
-    // If we have an exact match or close match, calculate the solar date for target year
-    if (Math.abs(yearDiff) <= 50) {
-      // Simple approximation: add the year difference
-      const targetSolarDate = new Date(solarDate);
-      targetSolarDate.setFullYear(targetYear);
-      
-      // Adjust for lunar calendar drift (very rough approximation)
-      // Lunar year is about 11 days shorter than solar year
-      const lunarDrift = Math.floor(yearDiff * 11);
-      targetSolarDate.setDate(targetSolarDate.getDate() - lunarDrift);
-      
-      return targetSolarDate;
+  // Sort entries by year to find the best reference point
+  const sortedEntries = matchingEntries.map(entry => ({
+    ...entry,
+    solarDate: parseDateString(entry.solar),
+    lunarDate: parseDateString(entry.lunar)
+  })).filter(entry => entry.solarDate && entry.lunarDate)
+    .sort((a, b) => a.solarDate!.getFullYear() - b.solarDate!.getFullYear());
+
+  if (sortedEntries.length === 0) return null;
+
+  // Find the closest reference year
+  let bestEntry = sortedEntries[0];
+  let minYearDiff = Math.abs(targetYear - bestEntry.solarDate!.getFullYear());
+
+  for (const entry of sortedEntries) {
+    const yearDiff = Math.abs(targetYear - entry.solarDate!.getFullYear());
+    if (yearDiff < minYearDiff) {
+      minYearDiff = yearDiff;
+      bestEntry = entry;
     }
   }
 
-  // Fallback: approximate based on lunar calendar principles
-  const baseEntry = matchingEntries[0];
-  const baseSolarDate = parseDateString(baseEntry.solar);
-  const baseLunarDate = parseDateString(baseEntry.lunar);
+  // Calculate the target solar date
+  const refSolarDate = bestEntry.solarDate!;
+  const yearDiff = targetYear - refSolarDate.getFullYear();
   
-  if (baseSolarDate && baseLunarDate) {
-    const yearDiff = targetYear - baseSolarDate.getFullYear();
-    const targetSolarDate = new Date(baseSolarDate);
-    targetSolarDate.setFullYear(targetYear);
-    
-    // Apply lunar drift correction
-    const lunarDrift = Math.floor(yearDiff * 11);
+  // Create target date by adding years
+  const targetSolarDate = new Date(refSolarDate);
+  targetSolarDate.setFullYear(targetYear);
+  
+  // Lunar calendar adjustment: lunar year is approximately 354 days vs 365 days solar
+  // This creates about 11 days drift per year
+  const lunarDrift = Math.floor(yearDiff * 11);
+  
+  // Apply the drift adjustment
+  if (yearDiff > 0) {
+    // For future years, lunar dates come earlier
     targetSolarDate.setDate(targetSolarDate.getDate() - lunarDrift);
-    
-    return targetSolarDate;
+  } else {
+    // For past years, lunar dates come later
+    targetSolarDate.setDate(targetSolarDate.getDate() + Math.abs(lunarDrift));
   }
-
-  return null;
+  
+  return targetSolarDate;
 }
 
 function calculateDday(targetDate: Date): string {
