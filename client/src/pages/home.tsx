@@ -62,23 +62,23 @@ export default function Home() {
           </h2>
           <div className="space-y-4 text-slate-600">
             <div className="flex items-start">
-              <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">1</span>
+              <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">1</span>
               <p>기념일 제목을 입력하세요. (예: 할머니 생신, 아버지 생신)</p>
             </div>
             <div className="flex items-start">
-              <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">2</span>
+              <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">2</span>
               <p>음력 월과 일을 선택하세요.</p>
             </div>
             <div className="flex items-start">
-              <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">3</span>
+              <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">3</span>
               <p>변환하기 버튼을 클릭하면 2025년부터 2050년까지의 양력 날짜를 확인할 수 있습니다.</p>
             </div>
             <div className="flex items-start">
-              <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">4</span>
+              <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">4</span>
               <p>결과를 CSV 파일로 다운로드하거나 클립보드에 복사할 수 있습니다.</p>
             </div>
             <div className="flex items-start">
-              <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">5</span>
+              <span className="inline-flex items-center justify-center w-7 h-7 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5 flex-shrink-0">5</span>
               <p>CSV 파일을 구글캘린더에서 불러오기 하면 됩니다.</p>
             </div>
           </div>
