@@ -34,9 +34,9 @@ npm run dev
 
 **해결 방법**:
 
-1. **CloudFlare Pages 대시보드에서 빌드 설정 변경**:
+**CloudFlare Pages 빌드 설정**:
    ```
-   Build command: npm run build
+   Build command: node build-client.js
    Build output directory: dist
    Root directory: (비워두기)
    Environment variables: NODE_VERSION=20

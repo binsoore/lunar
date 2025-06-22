@@ -6,13 +6,15 @@
 
 ### 1. CloudFlare Pages 빌드 설정 확인
 
-**현재 프로젝트에 맞는 설정**:
+**올바른 CloudFlare Pages 설정**:
 ```
-Build command: npm run build
+Build command: node build-client.js
 Build output directory: dist
 Root directory: (비워두기)
 Node.js version: 20
 ```
+
+**중요**: `npm run build`는 서버용 빌드이므로 `node build-client.js`를 사용해야 합니다.
 
 **빌드 환경 변수**:
 - `NODE_VERSION`: `20`
