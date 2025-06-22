@@ -152,17 +152,22 @@ export function convertLunarToSolar(eventTitle: string, lunarMonth: number, luna
   const results: ConversionResult[] = [];
   const startYear = 2025;
   const endYear = 2050;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   for (let year = startYear; year <= endYear; year++) {
     const solarDate = findLunarToSolarMapping(lunarMonth, lunarDay, year);
     
     if (solarDate) {
-      results.push({
-        year: year,
-        solarDate: formatSolarDate(solarDate),
-        dayOfWeek: getDayOfWeek(solarDate),
-        dday: calculateDday(solarDate)
-      });
+      // Only include dates that are today or in the future
+      if (solarDate >= today) {
+        results.push({
+          year: year,
+          solarDate: formatSolarDate(solarDate),
+          dayOfWeek: getDayOfWeek(solarDate),
+          dday: calculateDday(solarDate)
+        });
+      }
     }
   }
 
@@ -174,19 +179,28 @@ export function convertLunarToSolar(eventTitle: string, lunarMonth: number, luna
   };
 }
 
+function formatDateForCsv(solarDateStr: string): string {
+  // Convert Korean date format "2025년 1월 15일" to "2025-01-15"
+  const match = solarDateStr.match(/(\d{4})년\s*(\d{1,2})월\s*(\d{1,2})일/);
+  if (match) {
+    const year = match[1];
+    const month = match[2].padStart(2, '0');
+    const day = match[3].padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  return solarDateStr;
+}
+
 export function generateCsvContent(convertedResults: ConvertedResults): string {
-  const headers = ['연도', '양력 날짜', '요일', 'D-Day'];
+  const headers = ['Subject', 'Start Date', 'All Day Event'];
   const rows = [headers.join(',')];
   
-  // Add event info as comment
-  rows.push(`# ${convertedResults.eventTitle} (음력 ${convertedResults.lunarMonth}월 ${convertedResults.lunarDay}일)`);
-  
   convertedResults.results.forEach(result => {
+    const formattedDate = formatDateForCsv(result.solarDate);
     const row = [
-      result.year,
-      `"${result.solarDate}"`,
-      result.dayOfWeek,
-      result.dday
+      convertedResults.eventTitle,
+      formattedDate,
+      'TRUE'
     ];
     rows.push(row.join(','));
   });
@@ -199,7 +213,7 @@ export function downloadCsv(convertedResults: ConvertedResults): void {
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   
-  const filename = `${convertedResults.eventTitle}_음력${convertedResults.lunarMonth}월${convertedResults.lunarDay}일_양력변환.csv`;
+  const filename = `${convertedResults.eventTitle}_음력달력.csv`;
   
   link.href = URL.createObjectURL(blob);
   link.download = filename;

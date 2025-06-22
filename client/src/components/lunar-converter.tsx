@@ -326,8 +326,8 @@ export default function LunarConverter() {
                 <div className="flex items-center">
                   <AlertCircle className="text-blue-500 mr-2" size={16} />
                   <span className="text-blue-700 text-sm">
-                    총 <span className="font-medium">{results.results.length}</span>년간의 양력 날짜를 표시했습니다. 
-                    (2025년 ~ 2050년)
+                    총 <span className="font-medium">{results.results.length}</span>개의 향후 양력 날짜를 표시했습니다. 
+                    (오늘 이후 날짜만 포함)
                   </span>
                 </div>
               </div>
