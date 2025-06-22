@@ -148,7 +148,7 @@ export default function LunarConverter() {
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="예: 할머니 생신, 아버지 생일 등"
+                        placeholder="예: 할머니 생신, 아버지 생신 등"
                         {...field}
                         className="px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                       />

@@ -63,7 +63,7 @@ export default function Home() {
           <div className="space-y-4 text-slate-600">
             <div className="flex items-start">
               <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">1</span>
-              <p>기념일 제목을 입력하세요. (예: 할머니 생신, 아버지 생일)</p>
+              <p>기념일 제목을 입력하세요. (예: 할머니 생신, 아버지 생신)</p>
             </div>
             <div className="flex items-start">
               <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">2</span>
