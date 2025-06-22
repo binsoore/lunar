@@ -1,4 +1,6 @@
 import { Switch, Route } from "wouter";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 
@@ -12,9 +14,13 @@ function Router() {
 }
 
 function App() {
+  console.log("App component rendering");
   return (
-    <div>
-      <Router />
+    <div className="min-h-screen bg-slate-50">
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
     </div>
   );
 }

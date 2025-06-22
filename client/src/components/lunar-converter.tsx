@@ -11,7 +11,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { CalendarDays, Search, RotateCcw, Download, Copy, Check, AlertCircle } from "lucide-react";
 import { convertLunarToSolar, downloadCsv, generateCsvContent, type ConvertedResults } from "@/lib/lunar-converter";
-// import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 const formSchema = z.object({
   eventTitle: z.string().min(1, "기념일 제목을 입력해주세요"),
@@ -25,7 +25,7 @@ export default function LunarConverter() {
   const [results, setResults] = useState<ConvertedResults | null>(null);
   const [isConverting, setIsConverting] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  // const { toast } = useToast();
+  const { toast } = useToast();
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -45,7 +45,11 @@ export default function LunarConverter() {
       const convertedResults = convertLunarToSolar(data.eventTitle, lunarMonth, lunarDay);
       
       if (convertedResults.results.length === 0) {
-        alert("해당 음력 날짜에 대한 양력 변환 데이터를 찾을 수 없습니다.");
+        toast({
+          title: "변환 실패",
+          description: "해당 음력 날짜에 대한 양력 변환 데이터를 찾을 수 없습니다.",
+          variant: "destructive",
+        });
         return;
       }
       
@@ -57,7 +61,11 @@ export default function LunarConverter() {
       }, 100);
       
     } catch (error) {
-      alert("음력 변환 중 오류가 발생했습니다. 다시 시도해주세요.");
+      toast({
+        title: "오류 발생",
+        description: "음력 변환 중 오류가 발생했습니다. 다시 시도해주세요.",
+        variant: "destructive",
+      });
     } finally {
       setIsConverting(false);
     }
@@ -73,9 +81,16 @@ export default function LunarConverter() {
     
     try {
       downloadCsv(results);
-      alert("CSV 파일이 다운로드되었습니다.");
+      toast({
+        title: "다운로드 완료",
+        description: "CSV 파일이 다운로드되었습니다.",
+      });
     } catch (error) {
-      alert("CSV 파일 다운로드 중 오류가 발생했습니다.");
+      toast({
+        title: "다운로드 실패",
+        description: "CSV 파일 다운로드 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -89,9 +104,16 @@ export default function LunarConverter() {
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
       
-      alert("결과가 클립보드에 복사되었습니다.");
+      toast({
+        title: "복사 완료",
+        description: "결과가 클립보드에 복사되었습니다.",
+      });
     } catch (error) {
-      alert("클립보드 복사 중 오류가 발생했습니다.");
+      toast({
+        title: "복사 실패",
+        description: "클립보드 복사 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
     }
   };
 
