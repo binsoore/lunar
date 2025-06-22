@@ -14,14 +14,11 @@ function Router() {
 }
 
 function App() {
-  console.log("App component rendering");
   return (
-    <div className="min-h-screen bg-slate-50">
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-      </TooltipProvider>
-    </div>
+    <TooltipProvider>
+      <Toaster />
+      <Router />
+    </TooltipProvider>
   );
 }
 
