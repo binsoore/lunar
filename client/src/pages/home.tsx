@@ -85,7 +85,7 @@ export default function Home() {
       <footer className="mt-16 bg-white border-t border-slate-200">
         <div className="max-w-4xl mx-auto px-4 py-8">
           <div className="text-center text-slate-500 text-sm">
-            <p>&copy; 2024 음력 생일 양력 변환기</p>
+            <p>&copy; 2019 음력 생일 양력 변환기</p>
             <p className="mt-2">정확한 음력-양력 변환을 위해 한국천문연구원 데이터를 기반으로 합니다.</p>
           </div>
         </div>
