@@ -77,6 +77,10 @@ export default function Home() {
               <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">4</span>
               <p>결과를 CSV 파일로 다운로드하거나 클립보드에 복사할 수 있습니다.</p>
             </div>
+            <div className="flex items-start">
+              <span className="inline-flex items-center justify-center w-6 h-6 bg-primary text-white text-sm font-medium rounded-full mr-3 mt-0.5">5</span>
+              <p>CSV 파일을 구글캘린더에서 불러오기 하면 됩니다.</p>
+            </div>
           </div>
         </div>
       </main>
@@ -87,6 +91,7 @@ export default function Home() {
           <div className="text-center text-slate-500 text-sm">
             <p>&copy; 2019 음력 생일 양력 변환기</p>
             <p className="mt-2">정확한 음력-양력 변환을 위해 한국천문연구원 데이터를 기반으로 합니다.</p>
+            <p className="mt-2">문의: binsoore@naver.com</p>
           </div>
         </div>
       </footer>
