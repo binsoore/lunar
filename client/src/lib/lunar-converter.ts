@@ -60,7 +60,27 @@ function parseDateString(dateStr: string): Date | null {
 }
 
 function findLunarToSolarMapping(lunarMonth: number, lunarDay: number, targetYear: number): Date | null {
-  // Find entries that match the lunar month and day for any year in the data
+  // Find exact match for the target year first
+  const exactMatch = baseDateData.find(entry => {
+    const lunarDate = parseDateString(entry.lunar);
+    const solarDate = parseDateString(entry.solar);
+    
+    if (!lunarDate || !solarDate) return false;
+    
+    const lunarMonthFromData = lunarDate.getMonth() + 1;
+    const lunarDayFromData = lunarDate.getDate();
+    const solarYear = solarDate.getFullYear();
+    
+    return lunarMonthFromData === lunarMonth && 
+           lunarDayFromData === lunarDay && 
+           solarYear === targetYear;
+  });
+
+  if (exactMatch) {
+    return parseDateString(exactMatch.solar);
+  }
+
+  // If no exact match, find entries with same lunar month/day from other years
   const matchingEntries = baseDateData.filter(entry => {
     const lunarDate = parseDateString(entry.lunar);
     if (!lunarDate) return false;
@@ -73,50 +93,34 @@ function findLunarToSolarMapping(lunarMonth: number, lunarDay: number, targetYea
 
   if (matchingEntries.length === 0) return null;
 
-  // Sort entries by year to find the best reference point
-  const sortedEntries = matchingEntries.map(entry => ({
-    ...entry,
-    solarDate: parseDateString(entry.solar),
-    lunarDate: parseDateString(entry.lunar)
-  })).filter(entry => entry.solarDate && entry.lunarDate)
-    .sort((a, b) => a.solarDate!.getFullYear() - b.solarDate!.getFullYear());
+  // Find the closest year match
+  let closestEntry = matchingEntries[0];
+  let minYearDiff = Infinity;
 
-  if (sortedEntries.length === 0) return null;
-
-  // Find the closest reference year
-  let bestEntry = sortedEntries[0];
-  let minYearDiff = Math.abs(targetYear - bestEntry.solarDate!.getFullYear());
-
-  for (const entry of sortedEntries) {
-    const yearDiff = Math.abs(targetYear - entry.solarDate!.getFullYear());
+  for (const entry of matchingEntries) {
+    const solarDate = parseDateString(entry.solar);
+    if (!solarDate) continue;
+    
+    const yearDiff = Math.abs(targetYear - solarDate.getFullYear());
     if (yearDiff < minYearDiff) {
       minYearDiff = yearDiff;
-      bestEntry = entry;
+      closestEntry = entry;
     }
   }
 
-  // Calculate the target solar date
-  const refSolarDate = bestEntry.solarDate!;
+  const refSolarDate = parseDateString(closestEntry.solar);
+  if (!refSolarDate) return null;
+
+  // Calculate approximate solar date for target year
   const yearDiff = targetYear - refSolarDate.getFullYear();
+  const approximateDate = new Date(refSolarDate);
+  approximateDate.setFullYear(targetYear);
   
-  // Create target date by adding years
-  const targetSolarDate = new Date(refSolarDate);
-  targetSolarDate.setFullYear(targetYear);
+  // Apply lunar calendar drift adjustment (approximately 11 days per year)
+  const driftDays = Math.round(yearDiff * 10.875); // More precise lunar drift
+  approximateDate.setDate(approximateDate.getDate() - driftDays);
   
-  // Lunar calendar adjustment: lunar year is approximately 354 days vs 365 days solar
-  // This creates about 11 days drift per year
-  const lunarDrift = Math.floor(yearDiff * 11);
-  
-  // Apply the drift adjustment
-  if (yearDiff > 0) {
-    // For future years, lunar dates come earlier
-    targetSolarDate.setDate(targetSolarDate.getDate() - lunarDrift);
-  } else {
-    // For past years, lunar dates come later
-    targetSolarDate.setDate(targetSolarDate.getDate() + Math.abs(lunarDrift));
-  }
-  
-  return targetSolarDate;
+  return approximateDate;
 }
 
 function calculateDday(targetDate: Date): string {
