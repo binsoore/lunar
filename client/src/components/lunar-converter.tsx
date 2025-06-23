@@ -141,11 +141,17 @@ export default function LunarConverter() {
       {/* Google AdSense Top Banner */}
       <div className="flex justify-center mb-6">
         <ins className="adsbygoogle"
-             style={{ display: 'block' }}
+             style={{ display: 'block', minHeight: '100px', backgroundColor: '#f8f9fa', border: '1px dashed #ccc' }}
              data-ad-client="ca-pub-7373851806837186"
              data-ad-slot="1234567890"
              data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
+             data-full-width-responsive="true">
+          {process.env.NODE_ENV === 'development' && (
+            <div className="p-4 text-center text-gray-500 text-sm">
+              광고 영역 (프로덕션에서만 표시됩니다)
+            </div>
+          )}
+        </ins>
       </div>
 
       {/* Input Form */}
@@ -267,11 +273,17 @@ export default function LunarConverter() {
           {/* Google AdSense In-Content */}
           <div className="flex justify-center mb-6">
             <ins className="adsbygoogle"
-                 style={{ display: 'block' }}
+                 style={{ display: 'block', minHeight: '250px', backgroundColor: '#f8f9fa', border: '1px dashed #ccc' }}
                  data-ad-client="ca-pub-7373851806837186"
                  data-ad-slot="0987654321"
                  data-ad-format="rectangle"
-                 data-full-width-responsive="true"></ins>
+                 data-full-width-responsive="true">
+              {process.env.NODE_ENV === 'development' && (
+                <div className="p-4 text-center text-gray-500 text-sm">
+                  광고 영역 (프로덕션에서만 표시됩니다)
+                </div>
+              )}
+            </ins>
           </div>
 
           <Card id="results" className="shadow-lg border border-slate-200">
