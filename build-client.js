@@ -29,4 +29,12 @@ if (fs.existsSync('_redirects')) {
   fs.copyFileSync('_redirects', 'dist/_redirects');
 }
 
+// Copy favicon files
+if (fs.existsSync('public/favicon.svg')) {
+  fs.copyFileSync('public/favicon.svg', 'dist/favicon.svg');
+}
+if (fs.existsSync('public/favicon.ico')) {
+  fs.copyFileSync('public/favicon.ico', 'dist/favicon.ico');
+}
+
 console.log('Static build completed for CloudFlare Pages');
