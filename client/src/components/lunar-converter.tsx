@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -26,6 +26,17 @@ export default function LunarConverter() {
   const [isConverting, setIsConverting] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
   const { toast } = useToast();
+
+  // Initialize Google AdSense
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+        (window as any).adsbygoogle.push({});
+      }
+    } catch (err) {
+      console.log('AdSense error:', err);
+    }
+  }, [results]);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -127,6 +138,16 @@ export default function LunarConverter() {
 
   return (
     <div className="space-y-8">
+      {/* Google AdSense Top Banner */}
+      <div className="flex justify-center mb-6">
+        <ins className="adsbygoogle"
+             style={{ display: 'block' }}
+             data-ad-client="ca-pub-7373851806837186"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+      </div>
+
       {/* Input Form */}
       <Card className="shadow-lg border border-slate-200">
         <CardContent className="p-8">
@@ -242,7 +263,18 @@ export default function LunarConverter() {
 
       {/* Results Section */}
       {results && (
-        <Card id="results" className="shadow-lg border border-slate-200">
+        <>
+          {/* Google AdSense In-Content */}
+          <div className="flex justify-center mb-6">
+            <ins className="adsbygoogle"
+                 style={{ display: 'block' }}
+                 data-ad-client="ca-pub-7373851806837186"
+                 data-ad-slot="0987654321"
+                 data-ad-format="rectangle"
+                 data-full-width-responsive="true"></ins>
+          </div>
+
+          <Card id="results" className="shadow-lg border border-slate-200">
           <CardContent className="p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-slate-800 flex items-center">
@@ -334,6 +366,7 @@ export default function LunarConverter() {
             )}
           </CardContent>
         </Card>
+        </>
       )}
     </div>
   );
